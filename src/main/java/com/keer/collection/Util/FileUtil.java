@@ -1,13 +1,19 @@
 package com.keer.collection.Util;
 
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.JSONReader;
 import com.alibaba.fastjson.JSONWriter;
 import com.keer.collection.domain.Info;
 import com.keer.collection.domain.Infos;
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
 
 
 public class FileUtil {
@@ -64,30 +70,63 @@ public class FileUtil {
 
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         Infos infos=new Infos();
-//        infos.setId("1");
-//        for(int i=10;i<20;i++){
-//            Info info=new Info();
-//            info.setId("1");
-//            info.setTime("12"+i);
-//            info.setIp("192.168.85."+i);
-//            infos.addInfo(info);
-//        }
-//
-//        JSONWriter writer = new JSONWriter(new FileWriter("test.json"));
-//        writer.startArray();
-//
-//        writer.writeValue(infos);
-//        writer.endArray();
-//        writer.close();
         Info info=new Info();
         info.setIp("123123");
         info.setTime("123");
         info.setId("1");
-        String path="./JsonData/"+info.getId()+".json";
-        infos= FileUtil.readFile(path);
-        logger.info(infos.toString());
+        infos.setId(info.getId());
+        infos.addInfo(info);
+        String content=JSON.toJSONString(infos);
+
+
+        FileLock lock = null;
+        FileChannel channel=null;
+        try {
+            ByteBuffer byteBuffer=ByteBuffer.wrap(content.getBytes("utf-8"));
+            channel = new FileOutputStream("./test.json", false).getChannel();
+            lock = channel.lock();
+            channel.write(byteBuffer);
+        }catch (IOException e){
+            e.printStackTrace();
+        }finally {
+            if(lock!=null){
+                try {
+                    lock.release();
+                    lock=null;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(channel!=null){
+                try {
+                    channel.close();
+                    channel=null;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+//        try (FileChannel channel = new FileOutputStream("./test.json",true).getChannel()){
+//            lock = channel.lock();//无参lock()为独占锁
+//            channel.write(byteBuffer);
+//
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } finally {
+//            if (lock != null) {
+//                try {
+//                    lock.release();
+//                    lock = null;
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
     }
 
 }
