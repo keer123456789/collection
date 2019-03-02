@@ -1,18 +1,23 @@
 package com.keer.collection.Service;
 
-import com.keer.collection.Controlller.CollectionController;
+import com.keer.collection.Listener.MyApplicationEvent;
 import com.keer.collection.Util.FileUtil;
 import com.keer.collection.domain.Info;
-import com.keer.collection.domain.Infos;
 import com.keer.collection.domain.JsonResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
+
+
 
 @Service
 public class CollectionService {
     protected static final Logger logger = LoggerFactory.getLogger(CollectionService.class);
 
+    @Autowired
+    private ApplicationContext publisher;
     /**
      * 数据写入
      * @param info
@@ -20,35 +25,24 @@ public class CollectionService {
      */
     public JsonResult setInfo(Info info){
         JsonResult jsonResult=new JsonResult();
-        String path="./JsonData/"+info.getId()+".json";
-        Infos infos= FileUtil.readFile(path);
-        if(infos==null){
-            infos=new Infos();
-            infos.addInfo(info);
-            infos.setId(info.getId());
-            if(FileUtil.writeFile(infos)){
-                return success(path);
+        String dir="./JsonData"+info.getType();
+        int sum= FileUtil.getDirSize(dir);
+        if(sum>=0&&sum<3){
+            if(!FileUtil.writeFile(info)){
+                return error(dir+"/"+info.getIp()+"/"+info.getId()+".json");
             }
-            else{
-                return error(path);
-            }
-        }else if(infos.getInfos().size()<3 && infos.getInfos().size()>=0){
-            infos=FileUtil.readFile(path);
-            infos.addInfo(info);
-            logger.info("正在写入数据");
-            if(FileUtil.writeFile(infos)){
-                return success(path);
-            }else{
-                return error(path);
-            }
+
         }else{
-            logger.error("******************多余数据写入，********************");
-            jsonResult.setState(JsonResult.ERROR);
-            jsonResult.setMessage("多与数据写入");
-            return jsonResult;
+           return error(dir+"/"+info.getIp()+"/"+info.getId()+".json");
         }
 
+        logger.info("触发算法事件，即将开始计算");
+        MyApplicationEvent event=new MyApplicationEvent(this);
+        publisher.publishEvent(event);
 
+
+
+        return success(dir+"/"+info.getIp()+"/"+info.getId()+".json");
     }
 
     /**

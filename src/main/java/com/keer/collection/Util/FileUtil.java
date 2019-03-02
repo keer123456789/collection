@@ -2,19 +2,11 @@ package com.keer.collection.Util;
 
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.JSONReader;
-import com.alibaba.fastjson.JSONWriter;
 import com.keer.collection.domain.Info;
-import com.keer.collection.domain.Infos;
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.io.*;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
-import java.nio.channels.FileLock;
 
+import java.io.*;
 
 public class FileUtil {
     private static Logger logger = LoggerFactory.getLogger(FileUtil.class);
@@ -22,111 +14,148 @@ public class FileUtil {
     /**
      * 创建json文件
      * 会覆盖之前的数据。
-     * @param infos
+     *
+     * @param info
      * @return
      */
-    public static boolean writeFile(Infos infos) {
-        JSONWriter writer = null;
-        String path = "./JsonData/" + infos.getId() + ".json";
-        try {
-            logger.info("开始写入文件…………");
-            writer = new JSONWriter(new FileWriter(path));
-            writer.startArray();
+    public static boolean writeFile(Info info) {
 
-            writer.writeValue(infos);
-            writer.endArray();
-            writer.close();
-            Thread.sleep(2000);
-            return true;
-        } catch (Exception e) {
-            logger.info("写入文件错误");
+        //TODO 路径为测试路径，可更改
+        String dir = "./JsonData/" + info.getType() + "/" + info.getIp();
+        String path = "./JsonData/" + info.getType() + "/" + info.getIp() + "/" + info.getId() + ".json";
+        if (makedir(dir)) {
+            if (!createFile(path)) {
+                return false;
+            }
+        } else {
             return false;
+        }
+
+
+        String json = JSON.toJSONString(info);
+        FileWriter writer = null;
+        try {
+            writer = new FileWriter(path);
+            writer.write("");
+            writer.write(json);
+            writer.flush();
+            writer.close();
+            logger.info("写入文件成功！！");
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.error("写入文件失败！！");
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * 读取指定文件内容
+     *
+     * @param path
+     * @return
+     */
+    public static String readFile(String path) {
+        File file = new File(path);
+        if (file.isFile() && file.exists()) {
+            try {
+                FileInputStream fileInputStream = new FileInputStream(file);
+                InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, "UTF-8");
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                StringBuffer sb = new StringBuffer();
+                String text = null;
+                while ((text = bufferedReader.readLine()) != null) {
+                    sb.append(text);
+                }
+                return sb.toString();
+            } catch (Exception e) {
+                logger.info("文件读取失败");
+                return null;
+            }
+        } else {
+            logger.info("文件路径不存在！！！！");
+            return null;
         }
 
     }
 
     /**
-     * 读取json文件
-     * @param path
-     * @return
+     * 创建文件夹
+     *
+     * @param dir 文件夹路径
+     * @return true：创建成功和存在 false：创建失败
      */
-    public static Infos readFile(String path) {
-        JSONReader reader = null;
-        try {
-            reader = new JSONReader(new FileReader(path));
-        } catch (FileNotFoundException e) {
-            logger.info("系统中找不到指定文件，path："+path);
-            return null;
+    public static boolean makedir(String dir) {
+        File dirs = new File(dir);
+        if (dirs.exists()) {
+            logger.info("文件夹存在");
+            return true;
+        } else {
+            if (dirs.mkdirs()) {
+                logger.info("创建文件夹成功！！！");
+                return true;
+            } else {
+                logger.error("创建文件夹失败！！！！");
+                return false;
+            }
         }
-        reader.startArray();
-        Infos infos = new Infos();
-        while (reader.hasNext()) {
-            infos = reader.readObject(Infos.class);
-
-        }
-        reader.endArray();
-        reader.close();
-        return infos;
 
     }
 
-    public static void main(String[] args) {
-        Infos infos=new Infos();
-        Info info=new Info();
-        info.setIp("123123");
-        info.setTime("123");
-        info.setId("1");
-        infos.setId(info.getId());
-        infos.addInfo(info);
-        String content=JSON.toJSONString(infos);
-
-
-        FileLock lock = null;
-        FileChannel channel=null;
-        try {
-            ByteBuffer byteBuffer=ByteBuffer.wrap(content.getBytes("utf-8"));
-            channel = new FileOutputStream("./test.json", false).getChannel();
-            lock = channel.lock();
-            channel.write(byteBuffer);
-        }catch (IOException e){
-            e.printStackTrace();
-        }finally {
-            if(lock!=null){
-                try {
-                    lock.release();
-                    lock=null;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+    /**
+     * 创建文件
+     *
+     * @param path 文件路径
+     * @return 文件存在或者文件路径不存在返回 false  文件创建成功 返回true
+     */
+    public static boolean createFile(String path) {
+        File file = new File(path);
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+                logger.info("文件创建成功！！！");
+                return true;
+            } catch (IOException e) {
+                e.printStackTrace();
+                logger.error("文件路径不存在！！");
+                return false;
             }
-            if(channel!=null){
-                try {
-                    channel.close();
-                    channel=null;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+        } else {
+            logger.error("文件存在！！");
+            return false;
         }
+    }
 
-//        try (FileChannel channel = new FileOutputStream("./test.json",true).getChannel()){
-//            lock = channel.lock();//无参lock()为独占锁
-//            channel.write(byteBuffer);
-//
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } finally {
-//            if (lock != null) {
-//                try {
-//                    lock.release();
-//                    lock = null;
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
+    /**
+     * 查看路径下的文件夹个数
+     * @param dir
+     * @return 文件路径错误返回-1
+     */
+    public static int getDirSize(String dir) {
+        File file = new File(dir);
+        if (file.exists()) {
+            return file.listFiles().length;
+        }else {
+            return 0;
+        }
+    }
+
+    public static void main(String[] args) {
+//        Info info = new Info();
+//        info.setDate("12.66");
+//        info.setIp("192.168.1.3");
+//        info.setId("0");
+//        info.setType("tem");
+//        writeFile(info);
+        File file = new File("./JsonData/tem");
+        File[] files = file.listFiles();
+
+//        String ss=readFile("./JsonData/tem");
+//        Info info1=  JSON.parseObject(ss,Info.class);
+        logger.info(String.valueOf(files.length));
+        logger.info(files[0].getName());
     }
 
 }

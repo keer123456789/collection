@@ -2,8 +2,9 @@ package com.keer.collection.domain;
 
 public class Info {
     private String ip;
-    private String time;
+    private String date;
     private String id;
+    private String type;
 
     public String getIp() {
         return ip;
@@ -13,12 +14,12 @@ public class Info {
         this.ip = ip;
     }
 
-    public String getTime() {
-        return time;
+    public String getDate() {
+        return date;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public String getId() {
@@ -27,5 +28,13 @@ public class Info {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

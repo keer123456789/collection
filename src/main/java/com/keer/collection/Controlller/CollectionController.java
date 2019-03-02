@@ -1,6 +1,7 @@
 package com.keer.collection.Controlller;
 
 
+import com.keer.collection.Listener.MyApplicationEvent;
 import com.keer.collection.Service.CollectionService;
 import com.keer.collection.domain.Info;
 import com.keer.collection.domain.JsonResult;
@@ -8,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +25,8 @@ public class CollectionController {
     protected static final Logger logger = LoggerFactory.getLogger(CollectionController.class);
     @Autowired
     CollectionService collectionService;
+    @Autowired
+     private ApplicationContext publisher;
 
     /**
      *
@@ -34,6 +39,14 @@ public class CollectionController {
         logger.info("请求ip:"+getIpAddr(request));
         info.setIp(getIpAddr(request));
         return collectionService.setInfo(info);
+    }
+
+
+    @GetMapping("/get")
+    public void get(){
+        MyApplicationEvent event=new MyApplicationEvent(this);
+        publisher.publishEvent(event);
+        logger.info("chenggong ");
     }
 
     /**
