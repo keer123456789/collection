@@ -53,11 +53,21 @@ public class FileUtil {
     /**
      * 读取指定文件内容
      *
-     * @param path
+     * @param path 路径
      * @return
      */
     public static String readFile(String path) {
         File file = new File(path);
+        return readFile(file);
+
+    }
+
+    /**
+     * 读取文件内容
+     * @param file
+     * @return
+     */
+    public static String readFile(File file) {
         if (file.isFile() && file.exists()) {
             try {
                 FileInputStream fileInputStream = new FileInputStream(file);
@@ -69,6 +79,8 @@ public class FileUtil {
                 while ((text = bufferedReader.readLine()) != null) {
                     sb.append(text);
                 }
+                inputStreamReader.close();
+                fileInputStream.close();
                 return sb.toString();
             } catch (Exception e) {
                 logger.info("文件读取失败");

@@ -35,7 +35,7 @@ public class CollectionController {
      * @return
      */
     @PostMapping("/info")
-    public JsonResult setInfo(@RequestBody Info info,HttpServletRequest request) {
+    public JsonResult setInfo(@RequestBody Info info,HttpServletRequest request) throws InterruptedException {
         logger.info("请求ip:"+getIpAddr(request));
         info.setIp(getIpAddr(request));
         return collectionService.setInfo(info);
