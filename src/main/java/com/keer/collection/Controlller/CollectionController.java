@@ -44,9 +44,7 @@ public class CollectionController {
 
     @GetMapping("/get")
     public void get(){
-        MyApplicationEvent event=new MyApplicationEvent(this);
-        publisher.publishEvent(event);
-        logger.info("chenggong ");
+        logger.info("hello");
     }
 
     /**
