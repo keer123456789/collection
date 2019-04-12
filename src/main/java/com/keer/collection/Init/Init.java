@@ -14,7 +14,7 @@ public class Init implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         for (; true; ) {
-            if (HttpUtil.httpGet("192.168.137.1:8080/setRaspberryIP").equals("true")) {
+            if (HttpUtil.httpGet("http://192.168.137.1:8080/setRaspberryIP").equals("true")) {
                 logger.info("注册成功");
                 break;
             }
