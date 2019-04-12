@@ -4,7 +4,9 @@ import com.keer.collection.Util.HttpUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
 
+@Component
 public class Init implements CommandLineRunner {
 
     protected static Logger logger= LoggerFactory.getLogger(Init.class);
