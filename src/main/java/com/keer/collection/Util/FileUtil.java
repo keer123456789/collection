@@ -5,9 +5,11 @@ import com.alibaba.fastjson.JSON;
 import com.keer.collection.domain.Info;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.io.*;
-
+import java.util.Map;
+@Component
 public class FileUtil {
     private static Logger logger = LoggerFactory.getLogger(FileUtil.class);
 
@@ -18,21 +20,25 @@ public class FileUtil {
      * @param info
      * @return
      */
-    public static boolean writeFile(Info info) {
-
+    public boolean writeFile(String path, Map info) {
+        String json = JSON.toJSONString(info);
         //TODO 路径为测试路径，可更改
-        String dir = "./JsonData/" + info.getType() + "/" + info.getIp();
-        String path = "./JsonData/" + info.getType() + "/" + info.getIp() + "/" + info.getId() + ".json";
-        if (makedir(dir)) {
-            if (!createFile(path)) {
-                return false;
-            }
-        } else {
-            return false;
+        return writeFile(path,json);
+    }
+
+    public boolean writeFile(String path, String json) {
+        File file = new File(path);
+        if (file.exists()) {
+            file.delete();
         }
 
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.info("创建失败！！");
+        }
 
-        String json = JSON.toJSONString(info);
         FileWriter writer = null;
         try {
             writer = new FileWriter(path);
@@ -56,7 +62,7 @@ public class FileUtil {
      * @param path 路径
      * @return
      */
-    public static String readFile(String path) {
+    public String readFile(String path) {
         File file = new File(path);
         return readFile(file);
 
@@ -64,10 +70,11 @@ public class FileUtil {
 
     /**
      * 读取文件内容
+     *
      * @param file
      * @return
      */
-    public static String readFile(File file) {
+    public String readFile(File file) {
         if (file.isFile() && file.exists()) {
             try {
                 FileInputStream fileInputStream = new FileInputStream(file);
@@ -99,7 +106,7 @@ public class FileUtil {
      * @param dir 文件夹路径
      * @return true：创建成功和存在 false：创建失败
      */
-    public static boolean makedir(String dir) {
+    public boolean makedir(String dir) {
         File dirs = new File(dir);
         if (dirs.exists()) {
             logger.info("文件夹存在");
@@ -122,7 +129,7 @@ public class FileUtil {
      * @param path 文件路径
      * @return 文件存在或者文件路径不存在返回 false  文件创建成功 返回true
      */
-    public static boolean createFile(String path) {
+    public boolean createFile(String path) {
         File file = new File(path);
         if (!file.exists()) {
             try {
@@ -142,14 +149,15 @@ public class FileUtil {
 
     /**
      * 查看路径下的文件夹个数
+     *
      * @param dir
      * @return 文件路径错误返回-1
      */
-    public static int getDirSize(String dir) {
+    public int getDirSize(String dir) {
         File file = new File(dir);
         if (file.exists()) {
             return file.listFiles().length;
-        }else {
+        } else {
             return 0;
         }
     }
