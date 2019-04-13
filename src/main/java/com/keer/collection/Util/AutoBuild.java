@@ -16,7 +16,7 @@ public class AutoBuild {
     @Autowired
     FileUtil fileUtil;
 
-    @Scheduled(cron="10 * * * * ? ")
+    @Scheduled(cron="0 0 1 * * ? ")
     public void scheduled() {
         String json = HttpUtil.httpGet(url);
         logger.info(json);
