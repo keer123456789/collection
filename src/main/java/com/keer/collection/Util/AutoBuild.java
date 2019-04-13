@@ -16,11 +16,15 @@ public class AutoBuild {
     @Autowired
     FileUtil fileUtil;
 
-    @Scheduled(cron="0 0 1 * * ? ")
+    @Scheduled(cron="*/10 * * * * ? ")
     public void scheduled() {
         String json = HttpUtil.httpGet(url);
         logger.info(json);
-
+        for(;true;) {
+            if(fileUtil.writeFile("./env.json", json)){
+                break;
+            }
+        }
 
     }
 }
