@@ -18,6 +18,9 @@ public class CollectionService {
     @Autowired
     private ApplicationContext publisher;
 
+    @Autowired
+    FileUtil fileUtil;
+
     /**
      * 数据写入
      *
@@ -25,29 +28,30 @@ public class CollectionService {
      * @return
      */
     public JsonResult setInfo(Info info) throws InterruptedException {
-        JsonResult jsonResult = new JsonResult();
-        String dir = "./JsonData/" + info.getType();
-        int sum = FileUtil.getDirSize(dir);
-        logger.info(String.valueOf(sum));
-        if (sum >= 0 && sum < 3) {
-            boolean read = FileUtil.writeFile(info);
-            if (read) {
-                if (sum == 2) {
-                    logger.info("触发算法事件，即将开始计算");
-                    MyApplicationEvent event = new MyApplicationEvent(this);
-                    publisher.publishEvent(event);
-                }
-
-            } else {
-                return error(dir + "/" + info.getIp() + "/" + info.getId() + ".json");
-            }
-
-        } else {
-            return error(dir + "/" + info.getIp() + "/" + info.getId() + ".json");
-        }
-
-
-        return success(dir + "/" + info.getIp() + "/" + info.getId() + ".json");
+//        JsonResult jsonResult = new JsonResult();
+//        String dir = "./JsonData/" + info.getType();
+//        int sum = fileUtil.getDirSize(dir);
+//        logger.info(String.valueOf(sum));
+//        if (sum >= 0 && sum < 3) {
+//            boolean read = fileUtil.writeFile("helo.json",info);
+//            if (read) {
+//                if (sum == 2) {
+//                    logger.info("触发算法事件，即将开始计算");
+//                    MyApplicationEvent event = new MyApplicationEvent(this);
+//                    publisher.publishEvent(event);
+//                }
+//
+//            } else {
+//                return error(dir + "/" + info.getIp() + "/" + info.getId() + ".json");
+//            }
+//
+//        } else {
+//            return error(dir + "/" + info.getIp() + "/" + info.getId() + ".json");
+//        }
+//
+//
+//        return success(dir + "/" + info.getIp() + "/" + info.getId() + ".json");
+        return null;
     }
 
     /**

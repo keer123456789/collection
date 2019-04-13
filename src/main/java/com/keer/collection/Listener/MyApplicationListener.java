@@ -6,7 +6,9 @@ import com.keer.collection.Util.FileUtil;
 import com.keer.collection.domain.Info;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.ComponentScan;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -15,8 +17,11 @@ import java.util.List;
 public class MyApplicationListener implements ApplicationListener<MyApplicationEvent> {
     protected static final Logger logger = LoggerFactory.getLogger(MyApplicationListener.class);
 
+    @Autowired
+    FileUtil fileUtil;
+
     public void onApplicationEvent(MyApplicationEvent event) {
-        int sum = FileUtil.getDirSize("./JsonData");
+        int sum = fileUtil.getDirSize("./JsonData");
         if (sum != 0) {
             logger.info("开始进行计算");
             computeData();
@@ -26,7 +31,7 @@ public class MyApplicationListener implements ApplicationListener<MyApplicationE
 
     }
 
-    private static void computeData() {
+    private  void computeData() {
         String dir = "./JsonData";
         File typeFile = new File(dir);
         List<Info> infos = new ArrayList<>();
@@ -42,7 +47,7 @@ public class MyApplicationListener implements ApplicationListener<MyApplicationE
                     String ipDir = typeDir + "/" + ip;
                     File dataFile = new File(ipDir);
                     File[] dataFiles = dataFile.listFiles();
-                    String data = FileUtil.readFile(dataFiles[0]);
+                    String data = fileUtil.readFile(dataFiles[0]);
                     Info info = JSON.parseObject(data, Info.class);
                     infos.add(info);
                 }
