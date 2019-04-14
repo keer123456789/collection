@@ -42,9 +42,10 @@ public class CollectionController {
     }
 
 
-    @GetMapping("/get")
-    public void get(){
-        logger.info("hello");
+    @GetMapping("/getEnv")
+    public String getEnv(){
+        logger.info("请求数据范围………………");
+        return collectionService.getEnv();
     }
 
     /**

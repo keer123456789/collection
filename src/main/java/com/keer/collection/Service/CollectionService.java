@@ -1,5 +1,6 @@
 package com.keer.collection.Service;
 
+import com.alibaba.fastjson.JSON;
 import com.keer.collection.Listener.MyApplicationEvent;
 import com.keer.collection.Util.FileUtil;
 import com.keer.collection.domain.Info;
@@ -9,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 
 @Service
@@ -83,5 +86,12 @@ public class CollectionService {
         jsonResult.setMessage("数据写入成功");
         jsonResult.setState(JsonResult.SUCCESS);
         return jsonResult;
+    }
+
+
+    public String getEnv(){
+        String json=fileUtil.readFile("./env.json");
+        Map map= (Map) JSON.parse(json);
+        return map.get("temMax")+","+map.get("temMin")+","+map.get("HumMax")+","+map.get("HumMin")+","+map.get("CO2Max")+","+map.get("CO2Min");
     }
 }
