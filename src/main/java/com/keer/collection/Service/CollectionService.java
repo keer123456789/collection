@@ -89,9 +89,11 @@ public class CollectionService {
     }
 
 
-    public String getEnv(){
+    public String getEnv() throws InterruptedException {
         String json=fileUtil.readFile("./env.json");
+        Thread.sleep(1000);
         Map map= (Map) JSON.parse(json);
+        Thread.sleep(1000);
         return map.get("temMax")+","+map.get("temMin")+","+map.get("HumMax")+","+map.get("HumMin")+","+map.get("CO2Max")+","+map.get("CO2Min");
     }
 }
