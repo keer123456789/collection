@@ -43,7 +43,7 @@ public class CollectionController {
 
 
     @GetMapping("/getEnv")
-    public String getEnv(){
+    public String getEnv() throws InterruptedException {
         logger.info("请求数据范围………………");
         return collectionService.getEnv();
     }
