@@ -50,8 +50,8 @@ public class CollectionController {
         return collectionService.getEnv();
     }
 
-    @RequestMapping("/get")
-    public String getData(String tem,String hum, String co){
+    @RequestMapping("/get/{tem}/{hum}/{co}")
+    public String getData(@PathVariable String tem,@PathVariable String hum,@PathVariable String co){
         logger.info("温度："+tem+"湿度："+hum+"二氧化碳："+co);
         return "success";
     }
