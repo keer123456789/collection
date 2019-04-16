@@ -52,8 +52,8 @@ public class CollectionController {
     }
 
     @PostMapping("/get")
-    public String getData(@RequestBody Map map){
-        logger.info(map.toString());
+    public String getData(String tem,String hum,String co){
+        logger.info("tem="+tem+",hum="+hum+",co="+co);
         return "success";
     }
 
