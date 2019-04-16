@@ -10,10 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.context.ApplicationContext;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
@@ -42,10 +39,21 @@ public class CollectionController {
     }
 
 
+    /**
+     * nodemcu请求环境数据范围
+     * @return
+     * @throws InterruptedException
+     */
     @GetMapping("/getEnv")
     public String getEnv() throws InterruptedException {
         logger.info("请求数据范围………………");
         return collectionService.getEnv();
+    }
+
+    @GetMapping("/get/{tem}/{hum}/{co}")
+    public String getData(@PathVariable String tem, @PathVariable String hum, @PathVariable String co){
+        logger.info("温度："+tem+"湿度："+hum+"二氧化碳："+co);
+        return "success";
     }
 
     /**

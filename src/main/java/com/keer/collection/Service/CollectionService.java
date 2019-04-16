@@ -89,6 +89,11 @@ public class CollectionService {
     }
 
 
+    /**
+     * 获得env.json的文件中的数据
+     * @return
+     * @throws InterruptedException
+     */
     public String getEnv() throws InterruptedException {
         String json=fileUtil.readFile("./env.json");
         Thread.sleep(1000);
