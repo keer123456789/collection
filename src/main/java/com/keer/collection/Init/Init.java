@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-//@Component
+@Component
 public class Init implements CommandLineRunner {
 
     protected static Logger logger= LoggerFactory.getLogger(Init.class);
