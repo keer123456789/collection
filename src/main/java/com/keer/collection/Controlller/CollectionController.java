@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
+import java.util.Map;
 
 @RestController
 public class CollectionController {
@@ -50,9 +51,9 @@ public class CollectionController {
         return collectionService.getEnv();
     }
 
-    @RequestMapping("/get/{tem}/{hum}/{co}")
-    public String getData(@PathVariable String tem,@PathVariable String hum,@PathVariable String co){
-        logger.info("温度："+tem+"湿度："+hum+"二氧化碳："+co);
+    @PostMapping("/get")
+    public String getData(@RequestBody Map map){
+        logger.info(map.toString());
         return "success";
     }
 
