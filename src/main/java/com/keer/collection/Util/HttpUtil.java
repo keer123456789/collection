@@ -1,10 +1,12 @@
 package com.keer.collection.Util;
 
+import com.alibaba.fastjson.JSON;
 import okhttp3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * 封装了post，get的http请求类
