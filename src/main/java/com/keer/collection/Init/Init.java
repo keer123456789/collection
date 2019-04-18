@@ -31,7 +31,7 @@ public class Init implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         for (; true; ) {
-            if (HttpUtil.httpGet(initUrl+"/"+getlocalMac()).equals("true")) {
+            if (HttpUtil.httpGet(initUrl).equals("true")) {
                 logger.info("注册成功");
                 break;
             }
