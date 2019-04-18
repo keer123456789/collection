@@ -10,6 +10,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.Map;
 
 @Component
@@ -27,7 +31,7 @@ public class Init implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         for (; true; ) {
-            if (HttpUtil.httpGet(initUrl).equals("true")) {
+            if (HttpUtil.httpGet(initUrl+"/"+getlocalMac()).equals("true")) {
                 logger.info("注册成功");
                 break;
             }
@@ -41,5 +45,29 @@ public class Init implements CommandLineRunner {
             }
 
         }
+    }
+
+    private String getlocalMac() throws UnknownHostException, SocketException {
+        InetAddress ia = InetAddress.getLocalHost();
+        System.out.println(ia);
+        byte[] mac = NetworkInterface.getByInetAddress(ia).getHardwareAddress();
+
+        StringBuffer sb = new StringBuffer("");
+        for(int i=0; i<mac.length; i++) {
+            if(i!=0) {
+                sb.append("-");
+            }
+            //字节转换为整数
+            int temp = mac[i]&0xff;
+            String str = Integer.toHexString(temp);
+
+            if(str.length()==1) {
+                sb.append("0"+str);
+            }else {
+                sb.append(str);
+            }
+        }
+        System.out.println("本机MAC地址:"+sb.toString().toUpperCase());
+        return sb.toString().toUpperCase();
     }
 }
