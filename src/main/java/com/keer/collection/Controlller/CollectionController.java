@@ -60,6 +60,7 @@ public class CollectionController {
      */
     @PostMapping("/get")
     public String getData(String tem,String hum,String co,String id){
+        logger.info("接收到数据，温度："+tem+",湿度："+hum+",二氧化碳："+co);
         logger.info("准备发送数据…………");
         if(Integer.parseInt(id)==index&&data.size()<3){
             Map map=new HashMap();
