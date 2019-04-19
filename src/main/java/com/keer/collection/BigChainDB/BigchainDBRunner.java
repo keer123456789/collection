@@ -20,7 +20,7 @@ public class BigchainDBRunner {
 
     //获取配置文件的BigchainDB的url
     @Value("${bigchiandbUrl}")
-    private static String url;
+    private  String url;
 
     /**
      * 连接BigchainDB
