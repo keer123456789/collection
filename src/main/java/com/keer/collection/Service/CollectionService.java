@@ -52,7 +52,7 @@ public class CollectionService {
      * @param assetId
      * @return
      */
-    public boolean sendData(List<Map> data, String assetId) {
+    public boolean sendData(List<Map> data, String assetId) throws InterruptedException {
         double tem = 0.0;
         int temp = 0;
         double hum = 0.0;
@@ -108,6 +108,7 @@ public class CollectionService {
 
         BigchainDBData bigchainDBData = new BigchainDBData("Environment", map);
         String TXID = bigchainDBUtil.transferToSelf(bigchainDBData, assetId);
+        Thread.sleep(2000);
         if (bigchainDBUtil.checkTransactionExit(TXID)) {
             logger.info("交易ID：" + TXID);
             return true;
