@@ -20,7 +20,7 @@ public class KeyPairHolder {
     private static Logger logger = LoggerFactory.getLogger(KeyPairHolder.class);
 
     @Value("${keypath}")
-    private static String keyPath;
+    private  String keyPath;
 
     /**
      * 通过./keypair.txt获得密钥对
