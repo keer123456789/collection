@@ -38,6 +38,7 @@ public class Init implements CommandLineRunner {
         }
 
         for (; true; ) {
+            logger.info("请求服务器获取数据范围");
             String json = HttpUtil.httpGet(getEnvUrl);
             Map map = (Map) JSON.parse(json);
             if(fileUtil.writeFile("./env.json", map.get("data").toString())){
@@ -47,6 +48,12 @@ public class Init implements CommandLineRunner {
         }
     }
 
+    /**
+     * 获取本地mac
+     * @return
+     * @throws UnknownHostException
+     * @throws SocketException
+     */
     private String getlocalMac() throws UnknownHostException, SocketException {
         InetAddress ia = InetAddress.getLocalHost();
         System.out.println(ia);

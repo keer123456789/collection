@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
 
 @RestController
 public class CollectionController {
@@ -23,21 +25,19 @@ public class CollectionController {
     protected static final Logger logger = LoggerFactory.getLogger(CollectionController.class);
     @Autowired
     CollectionService collectionService;
+
+    private boolean isCreate=false;//资产创建与否
+
+    private String assetId="";//资产ID
+
+
+    private int index=0;//数据批次
+
+    private List<Map> data=new ArrayList<>();
     @Autowired
      private ApplicationContext publisher;
 
-    /**
-     *
-     * @param info
-     * @param request
-     * @return
-     */
-    @PostMapping("/info")
-    public JsonResult setInfo(@RequestBody Info info,HttpServletRequest request) throws InterruptedException {
-        logger.info("请求ip:"+getIpAddr(request));
-        info.setIp(getIpAddr(request));
-        return collectionService.setInfo(info);
-    }
+
 
 
     /**
@@ -47,15 +47,76 @@ public class CollectionController {
      */
     @GetMapping("/getEnv")
     public String getEnv() throws InterruptedException {
-        logger.info("请求数据范围………………");
+        logger.info("nodemcu请求数据范围………………");
         return collectionService.getEnv();
     }
 
+    /**
+     * nodemcu 发送数据
+     * @param tem
+     * @param hum
+     * @param co
+     * @return
+     */
     @PostMapping("/get")
-    public String getData(String tem,String hum,String co){
-        logger.info("tem="+tem+",hum="+hum+",co="+co);
+    public String getData(String tem,String hum,String co,String id){
+        logger.info("准备发送数据…………");
+        if(Integer.parseInt(id)==index&&data.size()<3){
+            Map map=new HashMap();
+            map.put("temperture",tem);
+            map.put("humidity",hum);
+            map.put("CO2",co);
+            map.put("id",id);
+            data.add(map);
+        }
+        if(data.size()>=3){
+            if(collectionService.sendData(data,assetId)){
+                data.clear();
+                index++;
+            }
+        }
         return "success";
     }
+
+
+
+    /**
+     * 服务器发来请求，此树莓派已经被创建
+     * @return
+     */
+    @GetMapping("/isCreate/{assetID}")
+    public String isCreate(@PathVariable String assetID){
+        logger.info("服务器发来请求，此树莓派已经被创建 资产ID："+assetID);
+        isCreate=true;
+        assetId=assetID;
+        return "success";
+    }
+
+    /**
+     * nodemcu 请求是否可以发送数据
+     * @return 树莓派资产创建完成，返回success，没有创建，返回fail
+     */
+    @GetMapping("/isSend")
+    public String isSend(){
+        logger.info("nodemcu请求是否可以发送数据"+isCreate);
+        if(isCreate){
+            return "success";
+        }else {
+            return "fail";
+        }
+    }
+
+    /**
+     * nodemcu 发来请求，获取数据的index
+     * @return 返回index
+     */
+    @GetMapping("/dataIndex")
+    public String dataIndex(){
+        logger.info("nodemcu获取数据index，"+index);
+        return index+"";
+    }
+
+
 
     /**
      * 获取请求IP
