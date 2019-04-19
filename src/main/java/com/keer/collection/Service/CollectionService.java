@@ -27,6 +27,8 @@ public class CollectionService {
     @Autowired
     FileUtil fileUtil;
 
+    @Autowired
+    BigchainDBUtil bigchainDBUtil;
 
     /**
      * 获得env.json的文件中的数据
@@ -105,8 +107,8 @@ public class CollectionService {
         logger.info("此次最终环境数据为：" + map.toString());
 
         BigchainDBData bigchainDBData = new BigchainDBData("Environment", map);
-        String TXID = BigchainDBUtil.transferToSelf(bigchainDBData, assetId);
-        if (BigchainDBUtil.checkTransactionExit(TXID)) {
+        String TXID = bigchainDBUtil.transferToSelf(bigchainDBData, assetId);
+        if (bigchainDBUtil.checkTransactionExit(TXID)) {
             logger.info("交易ID：" + TXID);
             return true;
         } else {
