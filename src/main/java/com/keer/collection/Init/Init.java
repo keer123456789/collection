@@ -28,6 +28,8 @@ public class Init implements CommandLineRunner {
     private String getEnvUrl;
     @Autowired
     FileUtil fileUtil;
+    @Autowired
+    BigchainDBRunner bigchainDBRunner;
 
     @Override
     public void run(String... args) throws Exception {
@@ -48,7 +50,7 @@ public class Init implements CommandLineRunner {
 
         }
 
-        BigchainDBRunner.StartConn();
+        bigchainDBRunner.StartConn();
     }
 
     /**

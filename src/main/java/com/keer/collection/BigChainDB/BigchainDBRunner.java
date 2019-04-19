@@ -8,10 +8,12 @@ import com.keer.collection.Util.HttpUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 /**
  * 连接BigchainDB
  */
+@Component
 public class BigchainDBRunner {
     //日志输出
     private static Logger logger = LoggerFactory.getLogger(BigchainDBRunner.class);
@@ -23,7 +25,7 @@ public class BigchainDBRunner {
     /**
      * 连接BigchainDB
      */
-    public static void StartConn() {
+    public  void StartConn() {
         StartConn(url);
     }
 
@@ -32,7 +34,7 @@ public class BigchainDBRunner {
      * @param url
      * @return
      */
-    public static boolean StartConn(String url) {
+    public  boolean StartConn(String url) {
 
         BigchainDbConfigBuilder
                 .baseUrl(url)
