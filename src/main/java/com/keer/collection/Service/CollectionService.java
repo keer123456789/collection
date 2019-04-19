@@ -45,6 +45,12 @@ public class CollectionService {
     }
 
 
+    /**
+     * 发送数据
+     * @param data
+     * @param assetId
+     * @return
+     */
     public boolean sendData(List<Map> data,String assetId){
         double tem =0.0;
         double hum=0.0;
@@ -61,12 +67,16 @@ public class CollectionService {
         map.put("temperture",tem+"");
         map.put("humidity",hum+"");
         map.put("CO2",co2+"");
+        map.put("id",data.get(0).get("id").toString());
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String time=df.format(new Date());
         map.put("time",time);
+        logger.info("此次最终环境数据为："+map.toString());
+
         BigchainDBData bigchainDBData=new BigchainDBData("Environment",map);
         String TXID=BigchainDBUtil.transferToSelf(bigchainDBData,assetId);
         if(BigchainDBUtil.checkTransactionExit(TXID)){
+            logger.info("交易ID："+TXID);
             return true;
         }else {
             return false;
