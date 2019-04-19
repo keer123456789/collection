@@ -28,57 +28,88 @@ public class CollectionService {
     FileUtil fileUtil;
 
 
-
-
-
     /**
      * 获得env.json的文件中的数据
+     *
      * @return
      * @throws InterruptedException
      */
     public String getEnv() throws InterruptedException {
-        String json=fileUtil.readFile("./env.json");
+        String json = fileUtil.readFile("./env.json");
         Thread.sleep(1000);
-        Map map= (Map) JSON.parse(json);
+        Map map = (Map) JSON.parse(json);
         Thread.sleep(1000);
-        return map.get("temMax")+","+map.get("temMin")+","+map.get("HumMax")+","+map.get("HumMin")+","+map.get("CO2Max")+","+map.get("CO2Min");
+        return map.get("temMax") + "," + map.get("temMin") + "," + map.get("HumMax") + "," + map.get("HumMin") + "," + map.get("CO2Max") + "," + map.get("CO2Min");
     }
 
 
     /**
      * 发送数据
+     *
      * @param data
      * @param assetId
      * @return
      */
-    public boolean sendData(List<Map> data,String assetId){
-        double tem =0.0;
-        double hum=0.0;
-        double co2=0.0;
-        for(Map map:data){
-            tem=tem+Double.valueOf(map.get("temperture").toString());
-            hum=hum+Double.valueOf(map.get("humidity").toString());
-            co2=co2+Double.valueOf(map.get("CO2").toString());
+    public boolean sendData(List<Map> data, String assetId) {
+        double tem = 0.0;
+        int temp = 0;
+        double hum = 0.0;
+        int humi = 0;
+        double co2 = 0.0;
+        int co2sum = 0;
+        for (Map map : data) {
+            if (!map.get("temperture").toString().equals("fail")) {
+                tem = tem + Double.valueOf(map.get("temperture").toString());
+                temp++;
+            }
+            if (!map.get("humidity").toString().equals("fail")) {
+                hum = hum + Double.valueOf(map.get("humidity").toString());
+                humi++;
+            }
+            if (!map.get("CO2").toString().equals("fail")) {
+                co2 = co2 + Double.valueOf(map.get("CO2").toString());
+                co2sum++;
+            }
         }
-        tem=tem/data.size();
-        hum=hum/data.size();
-        co2=co2/data.size();
-        Map map=new HashMap();
-        map.put("temperture",tem+"");
-        map.put("humidity",hum+"");
-        map.put("CO2",co2+"");
-        map.put("id",data.get(0).get("id").toString());
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String time=df.format(new Date());
-        map.put("time",time);
-        logger.info("此次最终环境数据为："+map.toString());
+        Map map = new HashMap();
 
-        BigchainDBData bigchainDBData=new BigchainDBData("Environment",map);
-        String TXID=BigchainDBUtil.transferToSelf(bigchainDBData,assetId);
-        if(BigchainDBUtil.checkTransactionExit(TXID)){
-            logger.info("交易ID："+TXID);
+        //判断正常温度的个数，做平均数
+        if (temp == 0) {
+            map.put("temperture", "fail");
+        } else {
+            tem = tem / temp;
+            map.put("temperture", tem + "");
+        }
+
+        //判断正湿度度的个数，做平均数
+        if (humi == 0) {
+            map.put("humidity", "fail");
+        } else {
+            hum = hum / humi;
+            map.put("humidity", hum + "");
+        }
+
+        //判断正常二氧化碳的个数，做平均数
+        if (co2sum == 0) {
+            map.put("CO2", "fail");
+        } else {
+            co2 = co2 / co2sum;
+            map.put("CO2", co2 + "");
+        }
+
+
+        map.put("id", data.get(0).get("id").toString());
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String time = df.format(new Date());
+        map.put("time", time);
+        logger.info("此次最终环境数据为：" + map.toString());
+
+        BigchainDBData bigchainDBData = new BigchainDBData("Environment", map);
+        String TXID = BigchainDBUtil.transferToSelf(bigchainDBData, assetId);
+        if (BigchainDBUtil.checkTransactionExit(TXID)) {
+            logger.info("交易ID：" + TXID);
             return true;
-        }else {
+        } else {
             return false;
         }
 
