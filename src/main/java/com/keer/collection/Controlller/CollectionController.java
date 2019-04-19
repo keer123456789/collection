@@ -1,6 +1,7 @@
 package com.keer.collection.Controlller;
 
 
+import com.keer.collection.BigChainDB.BigchainDBRunner;
 import com.keer.collection.Listener.MyApplicationEvent;
 import com.keer.collection.Service.CollectionService;
 import com.keer.collection.domain.Info;
@@ -25,6 +26,9 @@ public class CollectionController {
     protected static final Logger logger = LoggerFactory.getLogger(CollectionController.class);
     @Autowired
     CollectionService collectionService;
+
+
+
 
     private boolean isCreate=false;//资产创建与否
 

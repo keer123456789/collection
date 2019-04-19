@@ -1,6 +1,7 @@
 package com.keer.collection.Init;
 
 import com.alibaba.fastjson.JSON;
+import com.keer.collection.BigChainDB.BigchainDBRunner;
 import com.keer.collection.Util.FileUtil;
 import com.keer.collection.Util.HttpUtil;
 import org.slf4j.Logger;
@@ -46,6 +47,8 @@ public class Init implements CommandLineRunner {
             }
 
         }
+
+        BigchainDBRunner.StartConn();
     }
 
     /**
