@@ -111,9 +111,9 @@ public class CollectionController {
      * @return 返回index
      */
     @GetMapping("/dataIndex")
-    public String dataIndex(){
+    public int dataIndex(){
         logger.info("nodemcu获取数据index，"+index);
-        return index+"";
+        return index;
     }
 
 
