@@ -109,7 +109,7 @@ public class CollectionService {
 
 
             map.put("id", data.get(0).get("id").toString());
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             String time = df.format(new Date());
             map.put("time", time);
             map.put("pigSty",pigSty);
