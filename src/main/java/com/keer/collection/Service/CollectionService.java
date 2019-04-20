@@ -68,8 +68,8 @@ public class CollectionService {
             double co2 = 0.0;
             int co2sum = 0;
             for (Map map : data) {
-                if (isDouble(map.get("temperture").toString())) {
-                    tem = tem + Double.valueOf(map.get("temperture").toString());
+                if (isDouble(map.get("temperature").toString())) {
+                    tem = tem + Double.valueOf(map.get("temperature").toString());
                     temp++;
                 }
                 if (isDouble(map.get("humidity").toString())) {
@@ -85,10 +85,10 @@ public class CollectionService {
 
             //判断正常温度的个数，做平均数
             if (temp == 0) {
-                map.put("temperture", "fail");
+                map.put("temperature", "fail");
             } else {
                 tem = tem / temp;
-                map.put("temperture", tem + "");
+                map.put("temperature", tem + "");
             }
 
             //判断正湿度度的个数，做平均数
@@ -132,7 +132,7 @@ public class CollectionService {
     }
 
 
-    private boolean isDouble(String str) {
+    public static boolean isDouble(String str) {
         if (null == str || "".equals(str)) {
             return false;
         }
@@ -140,5 +140,8 @@ public class CollectionService {
         return pattern.matcher(str).matches();
     }
 
+    public static void main(String[] args) {
+        logger.info(String.valueOf(isDouble("fail1")));
+    }
 
 }

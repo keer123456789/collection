@@ -68,7 +68,7 @@ public class CollectionController {
         logger.info("准备发送数据…………");
         if(Integer.parseInt(id)==index&&data.size()<3){
             Map map=new HashMap();
-            map.put("temperture",tem);
+            map.put("temperature",tem);
             map.put("humidity",hum);
             map.put("CO2",co);
             map.put("id",id);
