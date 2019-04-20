@@ -34,6 +34,7 @@ public class CollectionController {
 
     private String assetId="";//资产ID
 
+    private String pigSty="";
 
     private int index=0;//数据批次
 
@@ -77,7 +78,7 @@ public class CollectionController {
         }
         if(data.size()>=3){
             logger.info("开始发送数据给BigchainDB…………");
-            if(collectionService.sendData(data,assetId)){
+            if(collectionService.sendData(data,assetId,pigSty)){
                 data.clear();
                 index++;
             }
@@ -91,11 +92,12 @@ public class CollectionController {
      * 服务器发来请求，此树莓派已经被创建
      * @return
      */
-    @GetMapping("/isCreate/{assetID}")
-    public String isCreate(@PathVariable String assetID){
+    @GetMapping("/isCreate/{assetID}/{pigSty}")
+    public String isCreate(@PathVariable String assetID, @PathVariable String pigSty){
         logger.info("服务器发来请求，此树莓派已经被创建 资产ID："+assetID);
         isCreate=true;
         assetId=assetID;
+        this.pigSty=pigSty;
         return "success";
     }
 

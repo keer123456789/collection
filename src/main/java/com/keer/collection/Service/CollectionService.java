@@ -56,7 +56,7 @@ public class CollectionService {
      * @param assetId
      * @return
      */
-    public boolean sendData(List<Map> data, String assetId) throws InterruptedException {
+    public boolean sendData(List<Map> data, String assetId,String pigSty) throws InterruptedException {
         if(!isUse) {
             isUse=true;
 
@@ -112,6 +112,7 @@ public class CollectionService {
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String time = df.format(new Date());
             map.put("time", time);
+            map.put("pigSty",pigSty);
             logger.info("此次最终环境数据为：" + map.toString());
 
             BigchainDBData bigchainDBData = new BigchainDBData("Environment", map);
