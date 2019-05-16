@@ -1,7 +1,9 @@
 package com.keer.collection.Init;
 
 import com.alibaba.fastjson.JSON;
+import com.bigchaindb.util.KeyPairUtils;
 import com.keer.collection.BigChainDB.BigchainDBRunner;
+import com.keer.collection.BigChainDB.KeyPairHolder;
 import com.keer.collection.Util.FileUtil;
 import com.keer.collection.Util.HttpUtil;
 import org.slf4j.Logger;
@@ -26,8 +28,12 @@ public class Init implements CommandLineRunner {
     private String initUrl;
     @Value("${GetEnvUrl}")
     private String getEnvUrl;
+    @Value("${GetKey}")
+    private String getKey;
     @Autowired
     FileUtil fileUtil;
+    @Autowired
+    KeyPairHolder keyPairHolder;
     @Autowired
     BigchainDBRunner bigchainDBRunner;
 
@@ -49,6 +55,14 @@ public class Init implements CommandLineRunner {
             }
 
         }
+        for (; true; ) {
+            logger.info("请求数据密钥");
+            String key = HttpUtil.httpGet(getKey);
+            if (keyPairHolder.SaveKeyPairToTXT(keyPairHolder.getKeyPairFromString(key))) {
+                break;
+            }
+        }
+
 
         bigchainDBRunner.StartConn();
     }

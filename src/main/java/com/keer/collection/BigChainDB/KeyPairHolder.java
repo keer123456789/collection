@@ -67,8 +67,8 @@ public class KeyPairHolder {
      *
      * @param keyPair
      */
-    public  void SaveKeyPairToTXT(KeyPair keyPair) {
-        SaveKeyPairToTXT(keyPair,keyPath);
+    public  boolean SaveKeyPairToTXT(KeyPair keyPair) {
+        return SaveKeyPairToTXT(keyPair,keyPath);
     }
 
     /**
@@ -136,6 +136,7 @@ public class KeyPairHolder {
         logger.info("获得" + keyPath + "中的私钥");
         return (EdDSAPrivateKey) getKeyPairFromTXT().getPrivate();
     }
+
 
 
 
