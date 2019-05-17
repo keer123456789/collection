@@ -142,7 +142,7 @@ public class CollectionService {
     }
 
     public static void main(String[] args) {
-        logger.info(String.valueOf(isDouble("fail1")));
+        logger.info(String.valueOf(isDouble("23.1")));
     }
 
 }

@@ -77,7 +77,7 @@ public class CollectionController {
             logger.info("刚刚发来"+data.size()+"个数据，等待…………");
         }
 
-        if(data.size()>=1){
+        if(data.size()==3){
             logger.info("开始发送数据给BigchainDB…………"+data.toString());
             if(collectionService.sendData(data,assetId,pigSty)){
                 data.clear();
