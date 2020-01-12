@@ -115,17 +115,18 @@ public class CollectionService {
             map.put("pigSty",pigSty);
             logger.info("此次最终环境数据为：" + map.toString());
 
-            BigchainDBData bigchainDBData = new BigchainDBData("Environment", map);
-            String TXID = bigchainDBUtil.transferToSelf(bigchainDBData, assetId);
-            Thread.sleep(2000);
-            if (bigchainDBUtil.checkTransactionExit(TXID)) {
-                logger.info("交易ID：" + TXID);
-                isUse=false;
-                return true;
-            } else {
-                isUse=false;
-                return false;
-            }
+//            BigchainDBData bigchainDBData = new BigchainDBData("Environment", map);
+//            String TXID = bigchainDBUtil.transferToSelf(bigchainDBData, assetId);
+//            Thread.sleep(2000);
+//            if (bigchainDBUtil.checkTransactionExit(TXID)) {
+//                logger.info("交易ID：" + TXID);
+//                isUse=false;
+//                return true;
+//            } else {
+//                isUse=false;
+//                return false;
+//            }
+
         }else{
             return false;
         }
