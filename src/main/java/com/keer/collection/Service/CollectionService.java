@@ -30,7 +30,7 @@ public class CollectionService {
 
     @Autowired
     BigchainDBUtil bigchainDBUtil;
-
+    //表示有人正在发送数据
     private boolean isUse=false;
 
 
@@ -133,6 +133,11 @@ public class CollectionService {
     }
 
 
+    /**
+     * 判断字符串是否为double
+     * @param str
+     * @return
+     */
     public static boolean isDouble(String str) {
         if (null == str || "".equals(str)) {
             return false;
