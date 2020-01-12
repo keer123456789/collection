@@ -126,6 +126,7 @@ public class CollectionService {
 //                isUse=false;
 //                return false;
 //            }
+            isUse=false;
             return true;
         }else{
             return false;
